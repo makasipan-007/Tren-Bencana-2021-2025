@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tren Bencana 2021-2025 - Data Resmi BNPB (Presentasi)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts: Playfair Display & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fbfbfa;
+            color: #1a1a1a;
+        }
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Transisi Default Slide Lainnya */
+        .slide {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+        }
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Animasi Khusus Slide 3: Naik dari bawah lebih dramatis */
+        #slide-3 {
+            transform: translateY(50px);
+            opacity: 0;
+        }
+        #slide-3.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between py-6 px-4 sm:px-6 lg:px-8">
+
+    <div class="max-w-4xl mx-auto w-full flex-grow flex flex-col justify-center">
+        <!-- Garis Dekoratif Hijau di Atas -->
+        <div class="w-16 h-1 bg-emerald-700 mx-auto mb-6 rounded"></div>
+
+        <!-- Header Section -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end border-b border-gray-300 pb-3 mb-6">
+            <div>
+                <h1 class="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 mb-1.5">
+                    Tren bencana 2021-2025
+                </h1>
+                <p class="text-xs text-gray-500 italic">klik grafik untuk melihat angka</p>
+            </div>
+            <div class="mt-2 sm:mt-0 flex items-center space-x-3">
+                <span id="slide-indicator" class="text-xs font-medium text-gray-600 bg-gray-200 px-2.5 py-1 rounded-full">Slide 1 dari 4</span>
+                <span class="text-xs font-semibold tracking-widest text-gray-500 uppercase">
+                    DATA RESMI BNPB
+                </span>
+            </div>
+        </div>
+
+        <!-- CONTAINER SLIDES -->
+        <div class="relative min-h-[420px] flex items-center overflow-hidden">
+
+            <!-- SLIDE 1: Total Kejadian Bencana -->
+            <div id="slide-1" class="slide active w-full bg-white border border-gray-200 rounded-xl p-6 shadow-sm flex-col justify-between">
+                <div>
+                    <h3 class="font-serif text-xl font-bold text-gray-900 mb-4">
+                        Total Kejadian Bencana
+                    </h3>
+                    <div class="relative h-64 w-full">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100">
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Fluktuasi kejadian menunjukkan titik puncak tertinggi pada tahun 2021 dan 2023.
+                    </p>
+                </div>
+            </div>
+
+            <!-- SLIDE 2: Proporsi Jenis Bencana (total) -->
+            <div id="slide-2" class="slide w-full bg-white border border-gray-200 rounded-xl p-6 shadow-sm flex-col justify-between">
+                <div>
+                    <h3 class="font-serif text-xl font-bold text-gray-900 mb-4">
+                        Proporsi Jenis Bencana (total)
+                    </h3>
+                    <div class="relative h-64 w-full flex items-center justify-center">
+                        <canvas id="proporsiChart"></canvas>
+                    </div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100">
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Banjir dan cuaca ekstrem mendominasi lanskap kebencanaan di berbagai wilayah.
+                    </p>
+                </div>
+            </div>
+
+            <!-- SLIDE 3: Korban Jiwa & hilang (Naik dari bawah dengan dramatis) -->
+            <div id="slide-3" class="slide w-full bg-white border border-gray-200 rounded-xl p-6 shadow-sm flex-col justify-between">
+                <div>
+                    <h3 class="font-serif text-xl font-bold text-gray-900 mb-4">
+                        Korban Jiwa & hilang
+                    </h3>
+                    <div class="relative h-64 w-full">
+                        <canvas id="korbanChart"></canvas>
+                    </div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100">
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Lonjakan signifikan tercatat pada tahun 2025 akibat bencana berskala masif.
+                    </p>
+                </div>
+            </div>
+
+            <!-- SLIDE 4: Rincian Kerusakan (Total) -->
+            <div id="slide-4" class="slide w-full bg-white border border-gray-200 rounded-xl p-6 shadow-sm flex-col justify-between">
+                <div>
+                    <h3 class="font-serif text-xl font-bold text-gray-900 mb-4">
+                        Rincian Kerusakan (Total)
+                    </h3>
+                    <div class="relative h-64 w-full flex items-center justify-center">
+                        <canvas id="kerusakanTotalChart"></canvas>
+                    </div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100">
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Akumulasi kerusakan didominasi oleh kategori rumah rusak ringan akibat berbagai skala bencana.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Navigasi Presentasi -->
+        <div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-200">
+            <button id="prev-btn" onclick="changeSlide(-1)" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-semibold rounded-lg transition disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed">
+                ← Sebelumnya
+            </button>
+            <div class="flex space-x-1.5" id="dots-container">
+                <span class="dot w-2.5 h-2.5 rounded-full bg-emerald-700 inline-block cursor-pointer transition-all duration-300" onclick="goToSlide(1)"></span>
+                <span class="dot w-2.5 h-2.5 rounded-full bg-gray-300 inline-block cursor-pointer transition-all duration-300" onclick="goToSlide(2)"></span>
+                <span class="dot w-2.5 h-2.5 rounded-full bg-gray-300 inline-block cursor-pointer transition-all duration-300" onclick="goToSlide(3)"></span>
+                <span class="dot w-2.5 h-2.5 rounded-full bg-gray-300 inline-block cursor-pointer transition-all duration-300" onclick="goToSlide(4)"></span>
+            </div>
+            <button id="next-btn" onclick="changeSlide(1)" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold rounded-lg transition cursor-pointer">
+                Selanjutnya →
+            </button>
+        </div>
+    </div>
+
+    <!-- Chart Scripts & Presentation Logic -->
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 4;
+        let kerusakanChartInstance = null;
+
+        function updateSlideView() {
+            for (let i = 1; i <= totalSlides; i++) {
+                document.getElementById(`slide-${i}`).classList.remove('active');
+            }
+            
+            setTimeout(() => {
+                document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            }, 50);
+            
+            document.getElementById('slide-indicator').innerText = `Slide ${currentSlide} dari ${totalSlides}`;
+
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+            if(currentSlide === totalSlides) {
+                document.getElementById('next-btn').classList.add('opacity-40', 'cursor-not-allowed');
+            } else {
+                document.getElementById('next-btn').classList.remove('opacity-40', 'cursor-not-allowed');
+            }
+
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                if (index + 1 === currentSlide) {
+                    dot.classList.remove('bg-gray-300');
+                    dot.classList.add('bg-emerald-700', 'scale-125');
+                } else {
+                    dot.classList.remove('bg-emerald-700', 'scale-125');
+                    dot.classList.add('bg-gray-300');
+                }
+            });
+
+            if (currentSlide === 4) {
+                setTimeout(() => {
+                    initKerusakanChart();
+                }, 100);
+            }
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 1) currentSlide = 1;
+            if (currentSlide > totalSlides) currentSlide = totalSlides;
+            updateSlideView();
+        }
+
+        function goToSlide(slideNum) {
+            currentSlide = slideNum;
+            updateSlideView();
+        }
+
+        // 1. Line Chart: Total Kejadian Bencana
+        const ctxTrend = document.getElementById('trendChart').getContext('2d');
+        new Chart(ctxTrend, {
+            type: 'line',
+            data: {
+                labels: ['2021', '2022', '2023', '2024', '2025'],
+                datasets: [{
+                    label: 'Total Kejadian',
+                    data: [5402, 3544, 5400, 3472, 4727],
+                    borderColor: '#d97706',
+                    backgroundColor: 'rgba(217, 119, 6, 0.1)',
+                    borderWidth: 2.5,
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: '#d97706',
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleFont: { size: 12 },
+                        bodyFont: { size: 12 },
+                        padding: 10,
+                        callbacks: {
+                            label: function(context) {
+                                return ` Kejadian: ${context.parsed.y.toLocaleString('id-ID')}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        min: 3000,
+                        max: 6000,
+                        ticks: { stepSize: 500, font: { size: 10 } },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 10 } }
+                    }
+                }
+            }
+        });
+
+        // 2. Doughnut Chart: Proporsi Jenis Bencana (total)
+        const ctxProporsi = document.getElementById('proporsiChart').getContext('2d');
+        new Chart(ctxProporsi, {
+            type: 'doughnut',
+            data: {
+                labels: ['Banjir', 'Cuaca Ekstrem', 'Tanah Longsor', 'Karhutla'],
+                datasets: [{
+                    data: [8009, 5597, 3083, 5184],
+                    backgroundColor: [
+                        '#2563eb', // Blue
+                        '#059669', // Emerald
+                        '#d97706', // Amber
+                        '#dc2626'  // Red
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 12,
+                            font: { size: 10 }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                let value = context.parsed || 0;
+                                return ` ${label}: ${value.toLocaleString('id-ID')} kasus`;
+                            }
+                        }
+                    }
+                },
+                cutout: '65%'
+            }
+        });
+
+        // 3. Stacked Bar Chart: Korban Jiwa & hilang
+        const ctxKorban = document.getElementById('korbanChart').getContext('2d');
+        new Chart(ctxKorban, {
+            type: 'bar',
+            data: {
+                labels: ['2021', '2022', '2023', '2024', '2025'],
+                datasets: [
+                    {
+                        label: 'Meninggal Dunia',
+                        data: [728, 858, 275, 540, 1666],
+                        backgroundColor: '#e11d48',
+                        borderRadius: 2,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.8
+                    },
+                    {
+                        label: 'Hilang',
+                        data: [87, 37, 33, 63, 214],
+                        backgroundColor: '#0d9488',
+                        borderRadius: 2,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.8
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 10,
+                            font: { size: 10 }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        callbacks: {
+                            label: function(context) {
+                                return ` ${context.dataset.label}: ${context.parsed.y} jiwa`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        max: 2000,
+                        ticks: { stepSize: 400, font: { size: 10 } },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    x: {
+                        stacked: true,
+                        grid: { display: false },
+                        ticks: { font: { size: 10 } }
+                    }
+                }
+            }
+        });
+
+        // 4. Pie Chart (Lingkaran Penuh): Rincian Kerusakan (Total)
+        function initKerusakanChart() {
+            const ctxKerusakanTotal = document.getElementById('kerusakanTotalChart').getContext('2d');
+            
+            if (kerusakanChartInstance) {
+                kerusakanChartInstance.destroy();
+            }
+
+            kerusakanChartInstance = new Chart(ctxKerusakanTotal, {
+                type: 'pie',
+                data: {
+                    labels: [
+                        'Rumah Rusak Berat', 
+                        'Rumah Rusak Sedang', 
+                        'Rumah Rusak Ringan', 
+                        'Fasilitas Pendidikan', 
+                        'Fasilitas Ibadah / Kesehatan', 
+                        'Kantor & Jembatan Rusak'
+                    ],
+                    datasets: [{
+                        data: [
+                            21335 + 20205 + 4870 + 13104 + 69049, 
+                            27936 + 23213 + 6079 + 15295 + 62487, 
+                            109387 + 51985 + 36265 + 51905 + 149663, 
+                            1755 + 1241 + 680 + 612 + 2206, 
+                            2232 + 647 + 506 + 497 + 1436, 
+                            664 + 505 + 393 + 534 + 1343  
+                        ],
+                        backgroundColor: [
+                            '#dc2626', // Red (Berat)
+                            '#d97706', // Amber (Sedang)
+                            '#2563eb', // Blue (Ringan)
+                            '#059669', // Emerald (Pendidikan)
+                            '#0d9488', // Teal (Ibadah/Kesehatan)
+                            '#7c3aed'  // Purple (Kantor/Jembatan)
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 10,
+                                font: { size: 9 }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    let value = context.parsed || 0;
+                                    return ` ${label}: ${value.toLocaleString('id-ID')} unit`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
